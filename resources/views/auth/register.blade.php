@@ -1,52 +1,98 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+@extends('layouts.app')
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+@section('title', '新規ユーザ登録')
+
+@section('content')
+    <div class="text-center">
+        <h1>
+            <i class="fab fa-telegram fa-lg pr-3"></i>
+            Topic Posts
+        </h1>
+    </div>
+
+    <div class="text-center mt-3">
+        <p class="text-left d-inline-block">
+            新規ユーザ登録すると投稿で<br>
+            コミュニケーションができるようになります。
+        </p>
+    </div>
+
+    <div class="text-center">
+        <h3 class="login_title text-left d-inline-block mt-5">
+            新規ユーザ登録
+        </h3>
+    </div>
+
+    <div class="row mt-5 mb-5">
+        <div class="col-sm-6 offset-sm-3">
+            @include('commons.error_messages')
+
+            <form method="POST" action="{{ route('register') }}">
+                @csrf
+
+                <div class="form-group">
+                    <label for="name">名前</label>
+                    <input
+                        id="name"
+                        type="text"
+                        class="form-control"
+                        name="name"
+                        value="{{ old('name') }}"
+                        required
+                        autofocus
+                        autocomplete="name"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="email">メールアドレス</label>
+                    <input
+                        id="email"
+                        type="email"
+                        class="form-control"
+                        name="email"
+                        value="{{ old('email') }}"
+                        required
+                        autocomplete="username"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">パスワード</label>
+                    <input
+                        id="password"
+                        type="password"
+                        class="form-control"
+                        name="password"
+                        required
+                        autocomplete="new-password"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password_confirmation">
+                        パスワード確認
+                    </label>
+                    <input
+                        id="password_confirmation"
+                        type="password"
+                        class="form-control"
+                        name="password_confirmation"
+                        required
+                        autocomplete="new-password"
+                    >
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-2">
+                    新規登録
+                </button>
+            </form>
+
+            <div class="mt-3">
+                <a href="{{ route('login') }}">
+                    すでに登録済みの方はこちら
+                </a>
+            </div>
         </div>
-
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    </div>
+@endsection
