@@ -28,7 +28,16 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'content' => ['required', 'string', 'max:140'],
+        ]);
+
+        Post::create([
+            'user_id' => auth()->id(),
+            'content' => $request->content,
+        ]);
+
+        return redirect('/');
     }
 
     /**
