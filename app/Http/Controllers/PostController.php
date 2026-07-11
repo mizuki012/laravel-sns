@@ -53,7 +53,13 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        if ($post->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        return view('posts.edit', [
+            'post' => $post,
+        ]);
     }
 
     /**
@@ -61,7 +67,19 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        if ($post->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $request->validate([
+            'content' => ['required', 'string', 'max:140'],
+        ]);
+
+        $post->update([
+            'content' => $request->content,
+        ]);
+
+        return redirect('/');
     }
 
     /**
@@ -70,11 +88,11 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         if ($post->user_id !== auth()->id()) {
-        abort(403);
+            abort(403);
         }
 
-    $post->delete();
+        $post->delete();
 
-    return redirect('/');
+        return redirect('/');
     }
 }
