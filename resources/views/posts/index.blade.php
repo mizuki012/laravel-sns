@@ -64,7 +64,9 @@
                 <div class="text-left d-inline-block w-75 mb-2">
                     <p class="mt-3 mb-0 d-inline-block">
                         投稿者：
-                        {{ $post->user->name }}
+                        <a href="{{ route('users.show', $post->user) }}">
+                            {{ $post->user->name }}
+                        </a>
                     </p>
                 </div>
 

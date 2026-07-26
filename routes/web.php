@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [UserController::class, 'index']);
+Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
