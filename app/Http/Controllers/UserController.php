@@ -30,4 +30,26 @@ class UserController extends Controller
             'posts' => $posts,
         ]);
     }
+
+    public function followings(User $user)
+    {
+        $users = $user->followings()
+            ->paginate(10);
+
+        return view('users.followings', [
+            'user' => $user,
+            'users' => $users,
+        ]);
+    }
+
+    public function followers(User $user)
+    {
+        $users = $user->followers()
+            ->paginate(10);
+
+        return view('users.followers', [
+            'user' => $user,
+            'users' => $users,
+        ]);
+    }
 }

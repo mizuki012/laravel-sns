@@ -22,6 +22,51 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
+    public function followings()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'user_follow',
+            'user_id',
+            'follow_id'
+        )->withTimestamps();
+    }
+
+    public function followers()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'user_follow',
+            'follow_id',
+            'user_id'
+        )->withTimestamps();
+    }
+
+    public function follow(int $userId)
+    {
+        if ($this->id === $userId) {
+            return false;
+        }
+
+        return $this->followings()->syncWithoutDetaching([$userId]);
+    }
+
+    public function unfollow(int $userId)
+    {
+        if ($this->id === $userId) {
+            return false;
+        }
+
+        return $this->followings()->detach($userId);
+    }
+
+    public function isFollowing(int $userId)
+    {
+        return $this->followings()
+            ->where('follow_id', $userId)
+            ->exists();
+    }
+
     /**
      * Get the attributes that should be cast.
      *
