@@ -67,6 +67,29 @@ class User extends Authenticatable
             ->exists();
     }
 
+    public function favorites()
+    {
+        return $this->belongsToMany(Post::class)
+            ->withTimestamps();
+    }
+
+    public function favorite(int $postId)
+    {
+        return $this->favorites()->syncWithoutDetaching([$postId]);
+    }
+
+    public function unfavorite(int $postId)
+    {
+        return $this->favorites()->detach($postId);
+    }
+
+    public function isFavoriting(int $postId)
+    {
+        return $this->favorites()
+            ->where('post_id', $postId)
+            ->exists();
+    }
+
     /**
      * Get the attributes that should be cast.
      *
