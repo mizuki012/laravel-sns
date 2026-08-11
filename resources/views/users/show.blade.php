@@ -82,32 +82,7 @@
                 </li>
             </ul>
 
-            <ul class="list-unstyled">
-                @foreach ($posts as $post)
-                    <li class="mb-3">
-                        <div class="mb-2">
-                            <p class="mt-3 mb-0">
-                                投稿者：
-                                {{ $post->user->name }}
-                            </p>
-                        </div>
-
-                        <div>
-                            <p class="mb-2">
-                                {{ $post->content }}
-                            </p>
-
-                            <p class="text-muted">
-                                {{ $post->created_at->format('Y年m月d日 H:i') }}
-                            </p>
-                        </div>
-                    </li>
-                @endforeach
-            </ul>
-
-            <div class="m-auto" style="width: fit-content">
-                {{ $posts->links() }}
-            </div>
+            @include('posts.posts')
         </div>
     </div>
 @endsection

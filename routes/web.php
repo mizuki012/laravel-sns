@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
@@ -18,6 +19,9 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     Route::post('/users/{user}/follow', [FollowController::class, 'store'])->name('users.follow');
     Route::delete('/users/{user}/unfollow', [FollowController::class, 'destroy'])->name('users.unfollow');
+
+    Route::post('/posts/{post}/favorite', [FavoriteController::class, 'store'])->name('posts.favorite');
+    Route::delete('/posts/{post}/unfavorite', [FavoriteController::class, 'destroy'])->name('posts.unfavorite');
 
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
     Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
