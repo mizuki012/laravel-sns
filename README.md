@@ -1,58 +1,144 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Topic Posts
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 概要
 
-## About Laravel
+Topic Posts は、Laravelで作成した簡易SNSアプリです。
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+ユーザー登録・ログイン後、140字以内の投稿を作成できます。  
+また、他ユーザーのフォロー、投稿へのいいね、ユーザー詳細ページでの投稿一覧表示など、SNSの基本機能を実装しています。
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+LaravelのEloquentリレーションを用いて、ユーザーと投稿の1対多関係、ユーザー同士のフォロー関係、ユーザーと投稿のいいね関係を管理しています。
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 使用技術
 
-## Learning Laravel
+- PHP
+- Laravel
+- Laravel Breeze
+- MySQL
+- Laravel Sail
+- Docker
+- Blade
+- Bootstrap
+- Git / GitHub
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 主な機能
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 認証機能
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+- ユーザー登録
+- ログイン
+- ログアウト
+- プロフィール編集
+- パスワード変更
+- アカウント削除
 
-## Agentic Development
+### 投稿機能
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+- 投稿作成
+- 投稿一覧表示
+- 投稿編集
+- 投稿削除
+- 140字以内のバリデーション
+- 投稿者名からユーザー詳細ページへ移動
+
+### ユーザー詳細機能
+
+- ユーザーごとの詳細ページ
+- ユーザー別の投稿一覧表示
+- フォロー数・フォロワー数の表示
+- 自分の詳細ページからプロフィール編集画面へ移動
+
+### フォロー機能
+
+- 他ユーザーのフォロー
+- フォロー解除
+- フォロー中一覧
+- フォロワー一覧
+- 自分自身をフォローできない制御
+
+### いいね機能
+
+- 投稿へのいいね
+- いいね解除
+- いいね数表示
+- 同じ投稿への二重いいね防止
+
+## データベース設計・リレーション
+
+### users テーブル
+
+ユーザー情報を管理します。
+
+主な関連：
+
+- User hasMany Post
+- User belongsToMany User（フォロー関係）
+- User belongsToMany Post（いいね関係）
+
+### posts テーブル
+
+投稿情報を管理します。
+
+主な関連：
+
+- Post belongsTo User
+- Post belongsToMany User（いいねしたユーザー）
+
+### user_follow テーブル
+
+ユーザー同士のフォロー関係を管理する中間テーブルです。
+
+| カラム | 内容 |
+|---|---|
+| user_id | フォローするユーザー |
+| follow_id | フォローされるユーザー |
+
+同じユーザーを二重にフォローできないように、`user_id` と `follow_id` の組み合わせにユニーク制約を設定しています。
+
+### post_user テーブル
+
+投稿へのいいね関係を管理する中間テーブルです。
+
+| カラム | 内容 |
+|---|---|
+| user_id | いいねしたユーザー |
+| post_id | いいねされた投稿 |
+
+同じユーザーが同じ投稿に二重でいいねできないように、`user_id` と `post_id` の組み合わせにユニーク制約を設定しています。
+
+## 工夫した点
+
+### Eloquentリレーションの活用
+
+ユーザーと投稿の1対多関係、フォロー機能・いいね機能の多対多関係をEloquentリレーションで実装しました。
+
+特にフォロー機能では、同じ `users` テーブル同士を `user_follow` テーブルでつなぎ、フォロー中・フォロワーの双方を取得できるようにしています。
+
+### Blade partialによる共通化
+
+投稿一覧表示を `resources/views/posts/posts.blade.php` に切り出し、トップページとユーザー詳細ページで共通利用しています。
+
+これにより、いいねボタンや投稿表示の修正を1か所で管理できるようにしました。
+
+### Bootstrapによる画面整備
+
+Laravel Breeze標準の画面を、アプリ全体の見た目に合わせてBootstrapベースに変更しました。
+
+ログイン画面、ユーザー登録画面、プロフィール編集画面、投稿一覧画面などを統一感のあるデザインに整えています。
+
+### 認証状態による表示制御
+
+ログイン中・未ログインで表示を切り替えています。
+
+未ログイン時は投稿一覧を閲覧できますが、投稿作成・いいね・編集・削除などの操作は表示しないようにしています。
+
+## セットアップ方法
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
-```
-
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+git clone https://github.com/mizuki012/laravel-sns.git
+cd laravel-sns
+cp .env.example .env
+composer install
+./vendor/bin/sail up -d
+./vendor/bin/sail artisan key:generate
+./vendor/bin/sail artisan migrate
