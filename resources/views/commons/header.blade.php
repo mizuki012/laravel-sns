@@ -20,7 +20,7 @@
             <ul class="navbar-nav">
                 @auth
                     <li class="nav-item">
-                        <a href="{{ route('profile.edit') }}" class="nav-link text-light">
+                        <a href="{{ route('users.show', Auth::user()) }}" class="nav-link text-light">
                             {{ Auth::user()->name }}
                         </a>
                     </li>
