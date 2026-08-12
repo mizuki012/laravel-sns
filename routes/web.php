@@ -13,7 +13,7 @@ Route::get('/users/{user}/followings', [UserController::class, 'followings'])->n
 Route::get('/users/{user}/followers', [UserController::class, 'followers'])->name('users.followers');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return redirect('/');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
